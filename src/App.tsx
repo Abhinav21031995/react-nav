@@ -1,19 +1,15 @@
 
-import { Navigate, Route, Routes, BrowserRouter } from 'react-router-dom';
 import './App.css';
 import Navbar from './components/navbar';
 
 function App() {
   return (
-    <BrowserRouter>
+    <div>
       <Navbar />
       <div style={{ padding: 20 }}>
-        <Routes>
-          <Route path="/" element={<Navigate to="/industry1" replace />} />
-
-        </Routes>
+        {/* Add any static content or components that don't require routing */}
       </div>
-    </BrowserRouter>
+    </div>
   );
 }
 
