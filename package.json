@@ -19,8 +19,9 @@
     "web-vitals": "^3.4.0"
   },
   "scripts": {
-    "start": "webpack serve",
-    "build": "webpack",
+    "start": "cross-env NODE_ENV=development webpack serve",
+    "start:remote": "cross-env NODE_ENV=production webpack serve",
+    "build": "cross-env NODE_ENV=production webpack",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
@@ -43,6 +44,8 @@
     ]
   },
   "devDependencies": {
+    "copy-webpack-plugin": "^13.0.1",
+    "cross-env": "^7.0.3",
     "webpack-cli": "^6.0.1"
   }
 }

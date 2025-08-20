@@ -17,7 +17,7 @@ var reactnav;
   \***********************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
-eval("{var moduleMap = {\n\t\"./App\": () => {\n\t\treturn Promise.all([__webpack_require__.e(\"webpack_sharing_consume_default_react_react\"), __webpack_require__.e(\"src_App_tsx\")]).then(() => (() => ((__webpack_require__(/*! ./src/App */ \"./src/App.tsx\")))));\n\t}\n};\nvar get = (module, getScope) => {\n\t__webpack_require__.R = getScope;\n\tgetScope = (\n\t\t__webpack_require__.o(moduleMap, module)\n\t\t\t? moduleMap[module]()\n\t\t\t: Promise.resolve().then(() => {\n\t\t\t\tthrow new Error('Module \"' + module + '\" does not exist in container.');\n\t\t\t})\n\t);\n\t__webpack_require__.R = undefined;\n\treturn getScope;\n};\nvar init = (shareScope, initScope) => {\n\tif (!__webpack_require__.S) return;\n\tvar name = \"default\"\n\tvar oldScope = __webpack_require__.S[name];\n\tif(oldScope && oldScope !== shareScope) throw new Error(\"Container initialization failed as it has already been initialized with a different share scope\");\n\t__webpack_require__.S[name] = shareScope;\n\treturn __webpack_require__.I(name, initScope);\n};\n\n// This exports getters to disallow modifications\n__webpack_require__.d(exports, {\n\tget: () => (get),\n\tinit: () => (init)\n});\n\n//# sourceURL=webpack://react-nav/container_entry?\n}");
+eval("{var moduleMap = {\n\t\"./App\": () => {\n\t\treturn Promise.all([__webpack_require__.e(\"webpack_sharing_consume_default_react_react\"), __webpack_require__.e(\"src_App_tsx\")]).then(() => (() => ((__webpack_require__(/*! ./src/App */ \"./src/App.tsx\")))));\n\t},\n\t\"./assets/logo\": () => {\n\t\treturn __webpack_require__.e(\"public_Passport-logo-RGB_svg\").then(() => (() => ((__webpack_require__(/*! ./public/Passport-logo-RGB.svg */ \"./public/Passport-logo-RGB.svg\")))));\n\t}\n};\nvar get = (module, getScope) => {\n\t__webpack_require__.R = getScope;\n\tgetScope = (\n\t\t__webpack_require__.o(moduleMap, module)\n\t\t\t? moduleMap[module]()\n\t\t\t: Promise.resolve().then(() => {\n\t\t\t\tthrow new Error('Module \"' + module + '\" does not exist in container.');\n\t\t\t})\n\t);\n\t__webpack_require__.R = undefined;\n\treturn getScope;\n};\nvar init = (shareScope, initScope) => {\n\tif (!__webpack_require__.S) return;\n\tvar name = \"default\"\n\tvar oldScope = __webpack_require__.S[name];\n\tif(oldScope && oldScope !== shareScope) throw new Error(\"Container initialization failed as it has already been initialized with a different share scope\");\n\t__webpack_require__.S[name] = shareScope;\n\treturn __webpack_require__.I(name, initScope);\n};\n\n// This exports getters to disallow modifications\n__webpack_require__.d(exports, {\n\tget: () => (get),\n\tinit: () => (init)\n});\n\n//# sourceURL=webpack://react-nav/container_entry?\n}");
 
 /***/ })
 
@@ -101,18 +101,6 @@ eval("{var moduleMap = {\n\t\"./App\": () => {\n\t\treturn Promise.all([__webpac
 /******/ 			// return url for filenames based on template
 /******/ 			return "" + chunkId + ".js";
 /******/ 		};
-/******/ 	})();
-/******/ 	
-/******/ 	/* webpack/runtime/global */
-/******/ 	(() => {
-/******/ 		__webpack_require__.g = (function() {
-/******/ 			if (typeof globalThis === 'object') return globalThis;
-/******/ 			try {
-/******/ 				return this || new Function('return this')();
-/******/ 			} catch (e) {
-/******/ 				if (typeof window === 'object') return window;
-/******/ 			}
-/******/ 		})();
 /******/ 	})();
 /******/ 	
 /******/ 	/* webpack/runtime/hasOwnProperty shorthand */
@@ -239,25 +227,7 @@ eval("{var moduleMap = {\n\t\"./App\": () => {\n\t\treturn Promise.all([__webpac
 /******/ 	
 /******/ 	/* webpack/runtime/publicPath */
 /******/ 	(() => {
-/******/ 		var scriptUrl;
-/******/ 		if (__webpack_require__.g.importScripts) scriptUrl = __webpack_require__.g.location + "";
-/******/ 		var document = __webpack_require__.g.document;
-/******/ 		if (!scriptUrl && document) {
-/******/ 			if (document.currentScript && document.currentScript.tagName.toUpperCase() === 'SCRIPT')
-/******/ 				scriptUrl = document.currentScript.src;
-/******/ 			if (!scriptUrl) {
-/******/ 				var scripts = document.getElementsByTagName("script");
-/******/ 				if(scripts.length) {
-/******/ 					var i = scripts.length - 1;
-/******/ 					while (i > -1 && (!scriptUrl || !/^http(s?):/.test(scriptUrl))) scriptUrl = scripts[i--].src;
-/******/ 				}
-/******/ 			}
-/******/ 		}
-/******/ 		// When supporting browsers where an automatic publicPath is not supported you must specify an output.publicPath manually via configuration
-/******/ 		// or pass an empty string ("") and set the __webpack_public_path__ variable from your code to use your own logic.
-/******/ 		if (!scriptUrl) throw new Error("Automatic publicPath is not supported in this browser");
-/******/ 		scriptUrl = scriptUrl.replace(/^blob:/, "").replace(/#.*$/, "").replace(/\?.*$/, "").replace(/\/[^\/]+$/, "/");
-/******/ 		__webpack_require__.p = scriptUrl;
+/******/ 		__webpack_require__.p = "http://localhost:3002/";
 /******/ 	})();
 /******/ 	
 /******/ 	/* webpack/runtime/consumes */
