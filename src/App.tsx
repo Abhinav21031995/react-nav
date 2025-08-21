@@ -5,8 +5,11 @@ import Navbar from './components/navbar';
 
 function App() {
   return (
-    <div>
+    <div className="app-container">
       <Navbar />
+      <main>
+        {/* Add any static content or components that don't require routing */}
+      </main>
     </div>
   );
 }

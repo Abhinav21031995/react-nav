@@ -1,0 +1,148 @@
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 1.5rem;
+  background-color: #ffffff;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  height: 64px;
+  min-height: 64px;
+}
+
+.navLeft {
+  display: flex;
+  align-items: center;
+  gap: 2.5rem;
+  height: 100%;
+}
+
+.navRight {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  height: 100%;
+}
+
+.dropdownContainer {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.logo {
+  width: 130px;
+  height: auto;
+  margin-right: 1rem;
+}
+
+.navLink {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  color: #333;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: color 0.2s;
+}
+
+.navLink:hover {
+  color: #007bff;
+}
+
+.arrow {
+  font-size: 0.8rem;
+  margin-left: 0.25rem;
+}
+
+.dropdown {
+  position: absolute;
+  top: calc(100% + 2px);
+  left: 0;
+  min-width: 220px;
+  max-height: 400px;
+  overflow-y: auto;
+  background-color: #ffffff;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  z-index: 1000;
+  padding: 0.25rem 0;
+}
+
+.checkboxContainer {
+  display: flex;
+  align-items: center;
+  padding: 0.35rem 0.75rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  font-size: 13px;
+  height: 28px;
+  white-space: nowrap;
+}
+
+.checkboxContainer:hover {
+  background-color: #f5f5f5;
+}
+
+.customCheckbox {
+  width: 16px;
+  height: 16px;
+  border: 2px solid #007bff;
+  border-radius: 3px;
+  margin-right: 0.75rem;
+  position: relative;
+  transition: background-color 0.2s;
+}
+
+.customCheckbox.checked {
+  background-color: #007bff;
+}
+
+.customCheckbox.checked::after {
+  content: '✓';
+  position: absolute;
+  color: white;
+  font-size: 12px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.checkboxLabel {
+  font-size: 0.9rem;
+  color: #333;
+}
+
+.extractorButton {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  background-color: #ff9800;
+  color: white;
+  border: none;
+  border-radius: 16px;
+  font-size: 13px;
+  cursor: pointer;
+  font-weight: normal;
+  height: 32px;
+}
+
+.extractIcon {
+  display: inline-block;
+  vertical-align: middle;
+  color: white;
+}
+
+.extractorButton:hover {
+  background-color: #f57c00;
+}
+
+.dropdownLabel {
+  font-size: 0.9rem;
+  color: #333;
+}

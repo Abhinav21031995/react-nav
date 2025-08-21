@@ -1,5 +1,5 @@
-import React from "react";
-import { config } from "../config";
+import React, { useState } from "react";
+import styles from './navbar.module.css';
 
 interface DropdownOption {
   id: string;
@@ -16,39 +16,12 @@ interface NavLinkProps {
 const NavLink = ({ children, onClick, isOpen }: NavLinkProps) => (
   <button
     onClick={onClick}
-    style={{
-      margin: "0 12px",
-      background: "none",
-      border: "none",
-      cursor: "pointer",
-      color: "#1976d2",
-      padding: "8px 16px",
-      textDecoration: "none",
-      fontSize: "15px",
-      fontWeight: 500,
-      position: "relative",
-      transition: "all 0.2s ease",
-      borderRadius: "4px",
-      fontFamily: "'Segoe UI', system-ui, sans-serif",
-      display: "flex",
-      alignItems: "center",
-      gap: "6px"
-    }}
-    onMouseEnter={(e) => {
-      e.currentTarget.style.backgroundColor = "#f0f7ff";
-      e.currentTarget.style.color = "#0056b3";
-    }}
-    onMouseLeave={(e) => {
-      e.currentTarget.style.backgroundColor = "transparent";
-      e.currentTarget.style.color = "#1976d2";
-    }}
+    className={styles.navLink}
   >
     {children}
-    {isOpen ? (
-      <span style={{ fontSize: "12px", marginTop: "2px" }}>▼</span>
-    ) : (
-      <span style={{ fontSize: "12px", marginTop: "2px" }}>▶</span>
-    )}
+    <span className={styles.arrow}>
+      {isOpen ? '▼' : '▶'}
+    </span>
   </button>
 );
 
@@ -62,71 +35,11 @@ const Dropdown = ({ options, onChange, show }: DropdownProps) => {
   if (!show) return null;
 
   return (
-    <div
-      style={{
-        position: "absolute",
-        top: "calc(100% + 4px)",
-        left: "0",
-        background: "white",
-        border: "1px solid #e0e0e0",
-        borderRadius: "8px",
-        padding: "8px 0",
-        minWidth: "250px",
-        boxShadow: "0 4px 20px rgba(0,0,0,0.1)",
-        zIndex: 1000,
-        fontFamily: "'Segoe UI', system-ui, sans-serif",
-        animation: "fadeIn 0.2s ease-out"
-      }}
-    >
-      <style>
-        {`
-          @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-10px); }
-            to { opacity: 1; transform: translateY(0); }
-          }
-          .checkbox-container {
-            display: flex;
-            align-items: center;
-            padding: 8px 16px;
-            transition: all 0.2s ease;
-            cursor: pointer;
-          }
-          .checkbox-container:hover {
-            background-color: #f5f9ff;
-          }
-          .custom-checkbox {
-            width: 18px;
-            height: 18px;
-            border: 2px solid #1976d2;
-            border-radius: 4px;
-            margin-right: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.2s ease;
-          }
-          .custom-checkbox.checked {
-            background-color: #1976d2;
-          }
-          .checkbox-label {
-            font-size: 14px;
-            color: #333;
-            font-weight: 500;
-          }
-          .checkmark {
-            color: white;
-            font-size: 12px;
-            display: none;
-          }
-          .custom-checkbox.checked .checkmark {
-            display: block;
-          }
-        `}
-      </style>
+    <div className={styles.dropdown}>
       {options.map((option) => (
         <div 
           key={option.id} 
-          className="checkbox-container"
+          className={styles.checkboxContainer}
           onClick={() => {
             const newOptions = options.map(opt =>
               opt.id === option.id ? { ...opt, checked: !opt.checked } : opt
@@ -134,10 +47,8 @@ const Dropdown = ({ options, onChange, show }: DropdownProps) => {
             onChange(newOptions);
           }}
         >
-          <div className={`custom-checkbox ${option.checked ? 'checked' : ''}`}>
-            <span className="checkmark">✓</span>
-          </div>
-          <span className="checkbox-label">{option.label}</span>
+          <div className={`${styles.customCheckbox} ${option.checked ? styles.checked : ''}`} />
+          <span className={styles.checkboxLabel}>{option.label}</span>
         </div>
       ))}
     </div>
@@ -153,7 +64,6 @@ interface NavbarState {
   channelsOptions: DropdownOption[];
   companiesOptions: DropdownOption[];
   economiesOptions: DropdownOption[];
-  drinksOptions: DropdownOption[];
 }
 
 class Navbar extends React.Component<{}, NavbarState> {
@@ -206,9 +116,6 @@ class Navbar extends React.Component<{}, NavbarState> {
       { id: '2', label: 'Cities', checked: false },
       { id: '3', label: 'Commodities', checked: false },
       { id: '4', label: 'EFT', checked: false }
-    ],
-    drinksOptions: [
-      { id: '1', label: 'Beer', checked: false }
     ]
   };
 
@@ -260,91 +167,83 @@ class Navbar extends React.Component<{}, NavbarState> {
     return (
     <nav 
       ref={this.navRef}
-      style={{
-        display: "flex",
-        alignItems: "center",
-        padding: "10px 20px",
-        background: "#f6f6f6",
-        position: "relative"
-      }}>
-      <img 
-        src="http://localhost:3002/assets/Passport-logo-RGB.svg"
-        alt="Passport Logo" 
-        style={{ width: 35, height: 35, marginRight: 10 }} 
-      />
-      <span style={{ fontWeight: "bold", marginRight: 40 }}>Passport</span>
-      <div style={{ position: "relative" }}>
-        <NavLink 
-          onClick={() => this.toggleDropdown('industries')}
-          isOpen={showIndustriesDropdown}
-        >
-          Industries
-        </NavLink>
-        <Dropdown
-          options={industriesOptions}
-          onChange={(newOptions) => this.updateOptions('industries', newOptions)}
-          show={showIndustriesDropdown}
+      className={styles.navbar}>
+      <div className={styles.navLeft}>
+        <img 
+          src="http://localhost:3002/assets/Passport-logo-RGB.svg"
+          alt="Passport Logo" 
+          className={styles.logo}
         />
+        <div className={styles.dropdownContainer}>
+          <NavLink 
+            onClick={() => this.toggleDropdown('industries')}
+            isOpen={showIndustriesDropdown}
+          >
+            Industries
+          </NavLink>
+          <Dropdown
+            options={industriesOptions}
+            onChange={(newOptions) => this.updateOptions('industries', newOptions)}
+            show={showIndustriesDropdown}
+          />
+        </div>
+        <div className={styles.dropdownContainer}>
+          <NavLink 
+            onClick={() => this.toggleDropdown('channels')}
+            isOpen={showChannelsDropdown}
+          >
+            Channels
+          </NavLink>
+          <Dropdown
+            options={channelsOptions}
+            onChange={(newOptions) => this.updateOptions('channels', newOptions)}
+            show={showChannelsDropdown}
+          />
+        </div>
+        <div className={styles.dropdownContainer}>
+          <NavLink 
+            onClick={() => this.toggleDropdown('companies')}
+            isOpen={showCompaniesDropdown}
+          >
+            Companies
+          </NavLink>
+          <Dropdown
+            options={companiesOptions}
+            onChange={(newOptions) => this.updateOptions('companies', newOptions)}
+            show={showCompaniesDropdown}
+          />
+        </div>
+        <div className={styles.dropdownContainer}>
+          <NavLink 
+            onClick={() => this.toggleDropdown('economies')}
+            isOpen={showEconomiesDropdown}
+          >
+            Economies
+          </NavLink>
+          <Dropdown
+            options={economiesOptions}
+            onChange={(newOptions) => this.updateOptions('economies', newOptions)}
+            show={showEconomiesDropdown}
+          />
+        </div>
       </div>
-      <div style={{ position: "relative" }}>
-        <NavLink 
-          onClick={() => this.toggleDropdown('channels')}
-          isOpen={showChannelsDropdown}
+      <div className={styles.navRight}>
+        <button
+          className={styles.extractorButton}
+          onClick={() => {
+            if (window.location.port === "3000") {
+              window.location.href = "/extractor";
+            } else {
+              window.location.href = "http://localhost:3001";
+            }
+          }}
         >
-          Channels
-        </NavLink>
-        <Dropdown
-          options={channelsOptions}
-          onChange={(newOptions) => this.updateOptions('channels', newOptions)}
-          show={showChannelsDropdown}
-        />
+          <svg className={styles.extractIcon} width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z" fill="currentColor"/>
+          </svg>
+          Extract Data
+        </button>
       </div>
-      <div style={{ position: "relative" }}>
-        <NavLink 
-          onClick={() => this.toggleDropdown('companies')}
-          isOpen={showCompaniesDropdown}
-        >
-          Companies
-        </NavLink>
-        <Dropdown
-          options={companiesOptions}
-          onChange={(newOptions) => this.updateOptions('companies', newOptions)}
-          show={showCompaniesDropdown}
-        />
-      </div>
-      <div style={{ position: "relative" }}>
-        <NavLink 
-          onClick={() => this.toggleDropdown('economies')}
-          isOpen={showEconomiesDropdown}
-        >
-          Economies
-        </NavLink>
-        <Dropdown
-          options={economiesOptions}
-          onChange={(newOptions) => this.updateOptions('economies', newOptions)}
-          show={showEconomiesDropdown}
-        />
-      </div>
-      <button
-        style={{
-          marginLeft: "auto",
-          padding: "6px 18px",
-          background: "#1976d2",
-          color: "#fff",
-          border: "none",
-          borderRadius: 4,
-          cursor: "pointer"
-        }}
-        onClick={() => {
-          if (window.location.port === "3000") {
-            window.location.href = "/extractor";
-          } else {
-            window.location.href = "http://localhost:3001";
-          }
-        }}
-      >
-        Extractor
-      </button>
     </nav>
     );
   }
