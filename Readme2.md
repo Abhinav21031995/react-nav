@@ -1,9 +1,51 @@
 # React-Nav - Microfrontend Implementation Changes
 
 ## Overview
-This document outlines the specific changes made to convert the Navigation UI application into a microfrontend component.
+This document outlines the specific changes made to convert the Navigation UI application into a microfrontend component and recent improvements.
 
-## Key Changes Made
+## Recent Updates (August 2025)
+
+### 1. Navigation Component Enhancements
+- Improved back button functionality
+- Enhanced navigation state management
+- Added better route handling
+```typescript
+// Improved navigation with state preservation
+const Navbar: React.FC = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const handleBackNavigation = () => {
+    if (isExtractorPage()) {
+      // Custom navigation logic for extractor
+    }
+    navigate(-1);
+  };
+};
+```
+
+### 2. UI/UX Improvements
+- Enhanced visual feedback for active routes
+- Improved responsive design
+- Better accessibility support
+```css
+.navbar {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 1000;
+  background: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+```
+
+### 3. Performance Optimizations
+- Added route-based code splitting
+- Implemented proper memoization
+- Enhanced bundle splitting
+- Improved error handling
+
+## Previous Key Changes Made
 
 ### 1. Added Module Federation Configuration
 Added webpack module federation to expose the Navigation UI as a remote module.
@@ -51,6 +93,49 @@ devServer: {
     "Access-Control-Allow-Headers": "X-Requested-With, content-type, Authorization"
   }
 }
+```
+
+## Development Guidelines
+
+### 1. Running the Application
+```bash
+# Development mode with module federation
+npm run start:remote  # Runs on port 3002
+
+# Production build
+npm run build:remote
+```
+
+### 2. State Management
+- Use React Router hooks for navigation
+- Implement proper state persistence
+- Handle navigation edge cases
+- Maintain navigation history
+
+### 3. Component Standards
+- Use TypeScript for type safety
+- Implement error boundaries
+- Follow React best practices
+- Add comprehensive tests
+
+## Known Issues and Solutions
+1. Navigation state persistence
+   - Implemented local storage backup
+   - Added state recovery mechanisms
+2. Route synchronization
+   - Enhanced route handling
+   - Improved state management
+3. Back button behavior
+   - Added custom logic for specific routes
+   - Improved state preservation
+
+## Future Improvements
+1. Enhanced route transitions
+2. Better state persistence
+3. Improved error recovery
+4. Additional navigation features
+    "Access-Control-Allow-Headers": "X-Requested-With, content-type, Authorization"
+
 ```
 
 ### 4. Package.json Dependencies

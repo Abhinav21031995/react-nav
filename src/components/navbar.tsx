@@ -152,6 +152,14 @@ class Navbar extends React.Component<{}, NavbarState> {
     }
   };
 
+  // Add a method to check if we're on the extractor page
+  isExtractorPage = () => {
+    // Check both the pathname and if there's a showExtractor query parameter
+    return window.location.pathname === '/extractor' || 
+           window.location.href.includes('showExtractor=true') ||
+           document.querySelector('[data-extractor-page="true"]') !== null;
+  };
+
   render() {
     const {
       showIndustriesDropdown,
@@ -163,6 +171,8 @@ class Navbar extends React.Component<{}, NavbarState> {
       companiesOptions,
       economiesOptions
     } = this.state;
+    
+    const isOnExtractorPage = this.isExtractorPage();
     
     return (
     <nav 
@@ -228,21 +238,50 @@ class Navbar extends React.Component<{}, NavbarState> {
         </div>
       </div>
       <div className={styles.navRight}>
-        <button
-          className={styles.extractorButton}
-          onClick={() => {
-            if (window.location.port === "3000") {
-              window.location.href = "/extractor";
-            } else {
-              window.location.href = "http://localhost:3001";
-            }
-          }}
-        >
-          <svg className={styles.extractIcon} width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z" fill="currentColor"/>
-          </svg>
-          Extract Data
-        </button>
+        {isOnExtractorPage && (
+          <button
+            className={styles.backButton}
+            onClick={() => {
+              // Dispatch event to notify about navigation
+              const event = new CustomEvent('navigate', {
+                detail: { path: '/', clearExtractor: true }
+              });
+              window.dispatchEvent(event);
+              
+              // Update URL without refresh
+              if (window.history && window.history.pushState) {
+                window.history.pushState({}, '', '/');
+              }
+            }}
+          >
+            <svg className={styles.backIcon} width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 20L4 12L12 4L13.425 5.4L7.825 11H20V13H7.825L13.425 18.6L12 20Z" fill="currentColor"/>
+            </svg>
+            Back to Home
+          </button>
+        )}
+        {!isOnExtractorPage && (
+          <button
+            className={styles.extractorButton}
+            onClick={() => {
+              // Dispatch event to notify about navigation
+              const event = new CustomEvent('navigate', {
+                detail: { path: '/extractor', showExtractor: true }
+              });
+              window.dispatchEvent(event);
+              
+              // Update URL without refresh
+              if (window.history && window.history.pushState) {
+                window.history.pushState({}, '', '/extractor');
+              }
+            }}
+          >
+            <svg className={styles.extractIcon} width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z" fill="currentColor"/>
+            </svg>
+            Extract Data
+          </button>
+        )}
       </div>
     </nav>
     );
