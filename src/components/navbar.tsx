@@ -1,5 +1,9 @@
 import React, { useState } from "react";
 import styles from './navbar.module.css';
+import Button from "shared_ui/Button";
+import Checkbox from "shared_ui/Checkbox";
+import RadioButton from "shared_ui/RadioButton";
+import { SharedComponentWrapper } from './SharedComponentWrapper';
 
 interface DropdownOption {
   id: string;
@@ -40,15 +44,20 @@ const Dropdown = ({ options, onChange, show }: DropdownProps) => {
         <div 
           key={option.id} 
           className={styles.checkboxContainer}
-          onClick={() => {
-            const newOptions = options.map(opt =>
-              opt.id === option.id ? { ...opt, checked: !opt.checked } : opt
-            );
-            onChange(newOptions);
-          }}
         >
-          <div className={`${styles.customCheckbox} ${option.checked ? styles.checked : ''}`} />
-          <span className={styles.checkboxLabel}>{option.label}</span>
+          <SharedComponentWrapper>
+            <Checkbox
+              label={option.label}
+              checked={option.checked}
+              color="primary"
+              onChange={(checked: boolean) => {
+                const newOptions = options.map(opt =>
+                  opt.id === option.id ? { ...opt, checked } : opt
+                );
+                onChange(newOptions);
+              }}
+            />
+          </SharedComponentWrapper>
         </div>
       ))}
     </div>
@@ -60,6 +69,8 @@ interface NavbarState {
   showChannelsDropdown: boolean;
   showCompaniesDropdown: boolean;
   showEconomiesDropdown: boolean;
+  showSubscriptionDropdown: boolean;
+  selectedSubscription?: string;
   industriesOptions: DropdownOption[];
   channelsOptions: DropdownOption[];
   companiesOptions: DropdownOption[];
@@ -83,7 +94,8 @@ class Navbar extends React.Component<{}, NavbarState> {
         showIndustriesDropdown: false,
         showChannelsDropdown: false,
         showCompaniesDropdown: false,
-        showEconomiesDropdown: false
+        showEconomiesDropdown: false,
+        showSubscriptionDropdown: false
       });
     }
   };
@@ -93,6 +105,8 @@ class Navbar extends React.Component<{}, NavbarState> {
     showChannelsDropdown: false,
     showCompaniesDropdown: false,
     showEconomiesDropdown: false,
+    showSubscriptionDropdown: false,
+    selectedSubscription: 'free',
     companiesOptions: [
       { id: '1', label: 'Microsoft', checked: false },
       { id: '2', label: 'Apple', checked: false },
@@ -119,19 +133,21 @@ class Navbar extends React.Component<{}, NavbarState> {
     ]
   };
 
-  toggleDropdown = (dropdown: 'industries' | 'channels' | 'companies' | 'economies') => {
+  toggleDropdown = (dropdown: 'industries' | 'channels' | 'companies' | 'economies' | 'subscription') => {
     const dropdownMap = {
       industries: 'showIndustriesDropdown',
       channels: 'showChannelsDropdown',
       companies: 'showCompaniesDropdown',
-      economies: 'showEconomiesDropdown'
+      economies: 'showEconomiesDropdown',
+      subscription: 'showSubscriptionDropdown'
     };
     
     this.setState(prevState => ({
       showIndustriesDropdown: dropdown === 'industries' ? !prevState.showIndustriesDropdown : false,
       showChannelsDropdown: dropdown === 'channels' ? !prevState.showChannelsDropdown : false,
       showCompaniesDropdown: dropdown === 'companies' ? !prevState.showCompaniesDropdown : false,
-      showEconomiesDropdown: dropdown === 'economies' ? !prevState.showEconomiesDropdown : false
+      showEconomiesDropdown: dropdown === 'economies' ? !prevState.showEconomiesDropdown : false,
+      showSubscriptionDropdown: dropdown === 'subscription' ? !prevState.showSubscriptionDropdown : false
     }));
   };
 
@@ -166,6 +182,8 @@ class Navbar extends React.Component<{}, NavbarState> {
       showChannelsDropdown,
       showCompaniesDropdown,
       showEconomiesDropdown,
+      showSubscriptionDropdown,
+      selectedSubscription,
       industriesOptions,
       channelsOptions,
       companiesOptions,
@@ -236,6 +254,33 @@ class Navbar extends React.Component<{}, NavbarState> {
             show={showEconomiesDropdown}
           />
         </div>
+        <div className={styles.dropdownContainer}>
+          <NavLink
+            onClick={() => this.toggleDropdown('subscription')}
+            isOpen={showSubscriptionDropdown}
+          >
+            Subscription
+          </NavLink>
+          {showSubscriptionDropdown && (
+            <div className={styles.dropdown}>
+              <div className={styles.radioContainer}>
+                <SharedComponentWrapper>
+                  <RadioButton
+                    name="subscription"
+                    options={[
+                      { value: 'free', label: 'Free' },
+                      { value: 'premium', label: 'Premium' },
+                      { value: 'enterprise', label: 'Enterprise' }
+                    ]}
+                    selectedValue={selectedSubscription}
+                    onChange={(value) => this.setState({ selectedSubscription: value })}
+                    variant="primary"
+                  />
+                </SharedComponentWrapper>
+              </div>
+            </div>
+          )}
+        </div>
       </div>
       <div className={styles.navRight}>
         {isOnExtractorPage && (
@@ -261,26 +306,25 @@ class Navbar extends React.Component<{}, NavbarState> {
           </button>
         )}
         {!isOnExtractorPage && (
-          <button
-            className={styles.extractorButton}
-            onClick={() => {
-              // Dispatch event to notify about navigation
-              const event = new CustomEvent('navigate', {
-                detail: { path: '/extractor', showExtractor: true }
-              });
-              window.dispatchEvent(event);
-              
-              // Update URL without refresh
-              if (window.history && window.history.pushState) {
-                window.history.pushState({}, '', '/extractor');
-              }
-            }}
-          >
-            <svg className={styles.extractIcon} width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z" fill="currentColor"/>
-            </svg>
-            Extract Data
-          </button>
+          <SharedComponentWrapper>
+            <Button
+              variant="primary"
+              size="medium"
+              label="Extract Data"
+              onClick={() => {
+                // Dispatch event to notify about navigation
+                const event = new CustomEvent('navigate', {
+                  detail: { path: '/extractor', showExtractor: true }
+                });
+                window.dispatchEvent(event);
+                
+                // Update URL without refresh
+                if (window.history && window.history.pushState) {
+                  window.history.pushState({}, '', '/extractor');
+                }
+              }}
+            />
+          </SharedComponentWrapper>
         )}
       </div>
     </nav>

@@ -5,7 +5,7 @@ const path = require("path");
 const deps = require("./package.json").dependencies;
 
 module.exports = {
-  entry: ["./src/bootstrap.tsx", "./src/index.tsx"],
+  entry: "./src/index.tsx",
   mode: "development",
   devServer: {
     port: 3002,
@@ -64,18 +64,21 @@ module.exports = {
         "./App": "./src/App",
         "./assets/logo": "./public/Passport-logo-RGB.svg"
       },
+      remotes: {
+        shared_ui: "shared_ui@http://localhost:3003/remoteEntry.js"
+      },
       shared: {
-        "react": {
+        react: { 
           singleton: true,
-          requiredVersion: ">=18.2.0", 
-          eager: process.env.NODE_ENV === 'development',
-          strictVersion: false
+          requiredVersion: deps.react,
+          shareScope: "default",
+          eager: false
         },
-        "react-dom": {
+        "react-dom": { 
           singleton: true,
-          requiredVersion: ">=18.2.0",
-          eager: process.env.NODE_ENV === 'development',
-          strictVersion: false
+          requiredVersion: deps["react-dom"],
+          shareScope: "default",
+          eager: false
         }
       }
     }),
@@ -97,6 +100,7 @@ module.exports = {
   output: {
     filename: "[name].js",
     path: path.resolve(__dirname, "dist"),
+    publicPath: "http://localhost:3002/",
     publicPath: process.env.NODE_ENV === 'development' ? 'auto' : 'http://localhost:3002/',
   },
 };
