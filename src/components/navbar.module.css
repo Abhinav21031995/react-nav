@@ -63,14 +63,40 @@
   top: calc(100% + 2px);
   left: 0;
   min-width: 220px;
-  max-height: 400px;
-  overflow-y: auto;
   background-color: #ffffff;
   border: 1px solid #e0e0e0;
   border-radius: 4px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   z-index: 1000;
+  padding: 0;
+  height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition: opacity 0.2s ease-in-out;
+}
+
+.dropdown.show {
+  height: 600px;
   padding: 0.5rem 0;
+  opacity: 1;
+  overflow-y: auto;
+}
+
+.dropdown > div {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.dropdown :global(.shared-tabs) {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.dropdown :global(.shared-tabs-content) {
+  flex: 1;
+  overflow-y: auto;
 }
 
 .radioGroup {
@@ -92,6 +118,23 @@
 
 .checkboxContainer:hover {
   background-color: #f5f5f5;
+}
+
+.dialogButton {
+  padding: 8px 16px;
+  background-color: #1976d2;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  margin: 0 auto;
+  display: block;
+}
+
+.dialogButton:hover {
+  background-color: #1565c0;
 }
 
 .customCheckbox {

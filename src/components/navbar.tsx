@@ -9,6 +9,11 @@ import { Tooltip } from "shared_ui/Tooltip";
 import { ProgressSpinner } from "shared_ui/ProgressSpinner";
 import { Loader } from "shared_ui/Loader";
 import { Input } from "shared_ui/Input";
+import { Dialog } from "shared_ui/Dialog";
+import { DatePicker } from "shared_ui/DatePicker";
+import ExpansionPanel from "shared_ui/ExpansionPanel";
+import { Tabs, Tab } from "shared_ui/Tabs";
+import Select from "shared_ui/Select";
 
 interface DropdownOption {
   id: string;
@@ -41,11 +46,14 @@ interface DropdownProps {
 }
 
 const Dropdown = ({ options, onChange, show }: DropdownProps) => {
-  if (!show) return null;
-
   return (
-    <div className={styles.dropdown}>
-      <div style={{ borderTop: '1px solid #e0e0e0', marginTop: '8px', paddingTop: '8px' }}>
+    <div className={`${styles.dropdown} ${show ? styles.show : ''}`}>
+      <ExpansionPanel
+        title="Expansion Panel"
+        description="options"
+        defaultExpanded={true}
+      >
+        <div style={{ borderTop: '1px solid #e0e0e0', marginTop: '8px', paddingTop: '8px' }}>
         {options.map((option) => (
           <div 
             key={option.id} 
@@ -67,9 +75,9 @@ const Dropdown = ({ options, onChange, show }: DropdownProps) => {
           </div>
         ))}
       </div>
+      </ExpansionPanel>
     </div>
   );
-  ;
 }
 
 interface NavbarState {
@@ -80,6 +88,8 @@ interface NavbarState {
   showSubscriptionDropdown: boolean;
   selectedSubscription?: string;
   searchQuery: string;
+  showDialog: boolean;
+  selectedDate: string;
   industriesOptions: DropdownOption[];
   channelsOptions: DropdownOption[];
   companiesOptions: DropdownOption[];
@@ -117,6 +127,8 @@ class Navbar extends React.Component<{}, NavbarState> {
     showSubscriptionDropdown: false,
     selectedSubscription: 'free',
     searchQuery: '',
+    showDialog: false,
+    selectedDate: '',
     companiesOptions: [
       { id: '1', label: 'Microsoft', checked: false },
       { id: '2', label: 'Apple', checked: false },
@@ -273,98 +285,181 @@ class Navbar extends React.Component<{}, NavbarState> {
               label="Select your subscription type and manage features"
               position="right"
             >
-              <span>Subscription</span>
+              <span>Storybook</span>
             </Tooltip>
           </NavLink>
             <div className={`${styles.dropdown} ${showSubscriptionDropdown ? styles.show : ''}`}>
               {showSubscriptionDropdown && (
                 <>
-                  <div className={styles.radioContainer}>
-                    <SharedComponentWrapper>
-                      <Tooltip
-                        label="Choose your subscription plan level"
-                        position="right"
-                      >
-                        <RadioButton
-                          name="subscription"
-                          options={[
-                            { value: 'free', label: 'Free' },
-                            { value: 'premium', label: 'Premium' },
-                            { value: 'enterprise', label: 'Enterprise' }
-                          ]}
-                          selectedValue={selectedSubscription}
-                          onChange={(value) => this.setState({ selectedSubscription: value })}
-                          variant="primary"
-                        />
-                      </Tooltip>
-                    </SharedComponentWrapper>
-                  </div>
-                  <div style={{ marginTop: 16, padding: '0 16px' }}>
-                    <SharedComponentWrapper>
-                      <Input
-                        value={this.state.searchQuery}
-                        placeholder="Search features..."
-                        label="Feature Search"
-                        onChange={(value) => this.setState({ searchQuery: value })}
-                      />
-                    </SharedComponentWrapper>
-                  </div>
-                  <div style={{ marginTop: 16 }}>
-                    <SharedComponentWrapper>
-                      <Tooltip
-                        label="Selected features and access levels for your subscription"
-                        position="left"
-                      >
-                        <Chipset
-                          chips={[
-                            { id: 1, label: 'Current Plan', removable: false, selected: true },
-                            { id: 2, label: 'Premium Features', removable: true, selected: false },
-                            { id: 3, label: 'Enterprise Access', removable: true, selected: false },
-                          ]}
-                          selectable={true}
-                          removable={true}
-                          onRemove={(chip: ChipItem) => console.log('Removed chip:', chip)}
-                          onToggle={(chip: ChipItem) => console.log('Toggled chip:', chip)}
-                        />
-                      </Tooltip>
-                    </SharedComponentWrapper>
-                  </div>
-                  <div style={{ marginTop: 16, padding: '16px' }}>
-                    <div style={{ display: 'flex', gap: '24px', alignItems: 'center', justifyContent: 'center', marginBottom: '24px' }}>
-                      <div>
-                        <p style={{ marginBottom: '8px', fontSize: '14px' }}>Loading...</p>
-                        <ProgressSpinner 
-                          mode="indeterminate"
-                          color="primary"
-                          size={40}
-                        />
-                      </div>
-                      <div>
-                        <p style={{ marginBottom: '8px', fontSize: '14px' }}>Progress</p>
-                        <ProgressSpinner 
-                          mode="determinate"
-                          color="accent"
-                          value={75}
-                          size={40}
-                        />
-                      </div>
-                      <div>
-                        <p style={{ marginBottom: '8px', fontSize: '14px' }}>Error</p>
-                        <ProgressSpinner 
-                          mode="indeterminate"
-                          color="warn"
-                          size={40}
-                        />
-                      </div>
-                    </div>
-                    <div style={{ borderTop: '1px solid #e0e0e0', paddingTop: '24px' }}>
-                      <p style={{ marginBottom: '16px', fontSize: '14px', textAlign: 'center' }}>Passport Logo Loader</p>
-                      <Loader />
-                    </div>
-                  </div>
+                  <SharedComponentWrapper>
+                    <Tabs>
+                      <Tab label="Subscription Plans">
+                        <div className={styles.radioContainer} style={{ padding: '16px' }}>
+                          <SharedComponentWrapper>
+                            <Tooltip
+                              label="Dropdown"
+                              position="right"
+                            >
+                              <Tooltip label="Select  Dropdown ">
+                                <Select
+                                  options={[
+                                    { value: 'free', label: 'Free Plan' },
+                                    { value: 'premium', label: 'Premium Plan' },
+                                    { value: 'enterprise', label: 'Enterprise Plan' }
+                                  ]}
+                                  value={selectedSubscription}
+                                  placeholder="Select a plan"
+                                  onChange={(value: string) => this.setState({ selectedSubscription: value })}
+                                  appearance="outline"
+                                />
+                              </Tooltip>
+                            </Tooltip>
+                          </SharedComponentWrapper>
+                          <div style={{ marginTop: '24px' }}>
+                            <SharedComponentWrapper>
+                              <Tooltip
+                                label="Choose radio button"
+                                position="right"
+                              >
+                                <Tooltip label="RadioButton selection">
+                                  <RadioButton
+                                    name="subscription"
+                                    options={[
+                                      { value: 'free', label: 'Free' },
+                                      { value: 'premium', label: 'Premium' },
+                                      { value: 'enterprise', label: 'Enterprise' }
+                                    ]}
+                                    selectedValue={selectedSubscription}
+                                    onChange={(value) => this.setState({ selectedSubscription: value })}
+                                    variant="primary"
+                                  />
+                                </Tooltip>
+                              </Tooltip>
+                            </SharedComponentWrapper>
+                          </div>
+                        </div>
+                      </Tab>
+                      <Tab label="Features">
+                        <div style={{ padding: '16px' }}>
+                          <SharedComponentWrapper>
+                            <Tooltip label="Search features...">
+                              <Input
+                                value={this.state.searchQuery}
+                                placeholder="Search features..."
+                                label="Feature Search"
+                                onChange={(value) => this.setState({ searchQuery: value })}
+                              />
+                            </Tooltip>
+                          </SharedComponentWrapper>
+                          <div style={{ marginTop: '16px' }}>
+                            <SharedComponentWrapper>
+                              <Tooltip label="DatePicker Component ">
+                                <DatePicker
+                                  value={this.state.selectedDate}
+                                  onChange={(value) => this.setState({ selectedDate: value })}
+                                  placeholder="Select date"
+                                  required
+                                />
+                              </Tooltip>
+                            </SharedComponentWrapper>
+                          </div>
+                        </div>
+                      </Tab>
+                      <Tab label="Symbols">
+                        <div style={{ padding: '16px' }}>
+                          <div style={{ marginBottom: '24px' }}>
+                            <SharedComponentWrapper>
+                              <Tooltip label="Chipset Component">
+                                <Chipset
+                                  chips={[
+                                    { id: 1, label: 'Current Plan', removable: false, selected: true },
+                                    { id: 2, label: 'Premium Features', removable: true, selected: false },
+                                    { id: 3, label: 'Enterprise Access', removable: true, selected: false },
+                                  ]}
+                                  selectable={true}
+                                  removable={true}
+                                  onRemove={(chip: ChipItem) => console.log('Removed chip:', chip)}
+                                  onToggle={(chip: ChipItem) => console.log('Toggled chip:', chip)}
+                                />
+                              </Tooltip>
+                            </SharedComponentWrapper>
+                          </div>
+                          <div style={{ marginTop: '24px', marginBottom: '24px' }}>
+                            <p style={{ marginBottom: '16px', fontSize: '14px', color: '#666', fontWeight: 500 }}>Progress Spinner Component</p>
+                            <div style={{ display: 'flex', gap: '24px', alignItems: 'center', justifyContent: 'center' }}>
+                              <div>
+                                <p style={{ marginBottom: '8px', fontSize: '14px' }}>Indeterminate</p>
+                                <Tooltip label="ProgressSpinner Component">
+                                <ProgressSpinner 
+                                  mode="indeterminate"
+                                  color="primary"
+                                  size={40}
+                                />
+                              </Tooltip>
+                              </div>
+                              <div>
+                                <p style={{ marginBottom: '8px', fontSize: '14px' }}>Determinate</p>
+                                <ProgressSpinner 
+                                  mode="determinate"
+                                  color="accent"
+                                  value={75}
+                                  size={40}
+                                />
+                              </div>
+                              <div>
+                                <p style={{ marginBottom: '8px', fontSize: '14px' }}>Error State</p>
+                                <ProgressSpinner 
+                                  mode="indeterminate"
+                                  color="warn"
+                                  size={40}
+                                />
+                              </div>
+                            </div>
+                          </div>
+                          <div style={{ borderTop: '1px solid #e0e0e0', paddingTop: '24px' }}>
+                            <p style={{ marginBottom: '16px', fontSize: '14px', color: '#666', fontWeight: 500 }}>Passport Logo Loader Component</p>
+                            <div style={{ display: 'flex', justifyContent: 'center' }}>
+                              <Tooltip label="Loader Custom Passport">
+                                <div style={{ color: '#0078D4' }}> {/* Microsoft blue color */}
+                                  <Loader />
+                                </div>
+                              </Tooltip>
+                            </div>
+                          </div>
+                          <div style={{ borderTop: '1px solid #e0e0e0', paddingTop: '24px', textAlign: 'center' }}>
+                            <Tooltip label="Dialog Component ">
+                              <button
+                                className={styles.dialogButton}
+                                onClick={() => this.setState({ showDialog: true })}
+                              >
+                                Open Dialog
+                              </button>
+                            </Tooltip>
+                          </div>
+                        </div>
+                      </Tab>
+                    </Tabs>
+                  </SharedComponentWrapper>
                 </>
               )}
             </div>
+            <Dialog
+              isOpen={this.state.showDialog}
+              onClose={() => this.setState({ showDialog: false })}
+              onConfirm={() => {
+                console.log('Dialog confirmed');
+                this.setState({ showDialog: false });
+              }}
+              onCancel={() => {
+                console.log('Dialog cancelled');
+                this.setState({ showDialog: false });
+              }}
+              title="Subscription Change"
+              message="Are you sure you want to change your subscription plan?"
+              confirmText="Yes, Change Plan"
+              cancelText="Cancel"
+              type="info"
+            />
         </div>
       </div>
       <div className={styles.navRight}>

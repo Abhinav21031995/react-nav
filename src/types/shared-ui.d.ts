@@ -11,6 +11,42 @@ declare module "shared_ui/Button" {
   export default Button;
 }
 
+declare module "shared_ui/Select" {
+  export interface SelectOption {
+    value: string;
+    label: string;
+  }
+
+  export interface SelectProps {
+    options: SelectOption[];
+    placeholder?: string;
+    value?: string;
+    onChange?: (value: string) => void;
+    appearance?: 'outline' | 'standard';
+  }
+
+  export const Select: React.FC<SelectProps>;
+  export default Select;
+}
+
+declare module "shared_ui/Tabs" {
+  export interface TabProps {
+    label: string;
+    children?: React.ReactNode;
+    disabled?: boolean;
+  }
+
+  export interface TabsProps {
+    children: React.ReactElement<TabProps>[];
+    stretch?: boolean;
+    onChange?: (index: number) => void;
+    defaultTab?: number;
+  }
+
+  export const Tab: React.FC<TabProps>;
+  export const Tabs: React.FC<TabsProps>;
+}
+
 declare module "shared_ui/Checkbox" {
   export interface CheckboxProps {
     label?: string;
@@ -147,4 +183,87 @@ declare module "shared_ui/Input" {
   }
 
   export const Input: React.FC<InputProps>;
+}
+
+declare module "shared_ui/Dialog" {
+  export interface DialogData {
+    title: string;
+    message: string;
+    confirmText?: string;
+    cancelText?: string;
+    type?: 'info' | 'warning' | 'error';
+  }
+
+  export interface DialogProps extends DialogData {
+    isOpen: boolean;
+    onClose: () => void;
+    onConfirm: () => void;
+    onCancel?: () => void;
+  }
+
+  export const Dialog: React.FC<DialogProps>;
+}
+
+declare module "shared_ui/DatePicker" {
+  export interface DatePickerProps {
+    /**
+     * The current value of the datepicker (dd/mm/yyyy format)
+     */
+    value?: string;
+    /**
+     * Placeholder text when no date is selected
+     */
+    placeholder?: string;
+    /**
+     * Called when the date changes
+     */
+    onChange?: (value: string) => void;
+    /**
+     * Whether the field is required
+     */
+    required?: boolean;
+    /**
+     * Error message to display when validation fails
+     */
+    error?: string;
+  }
+
+  export const DatePicker: React.FC<DatePickerProps>;
+}
+
+declare module "shared_ui/Card" {
+  export interface CardProps {
+    /**
+     * The heading text to display at the top of the card
+     */
+    label?: string;
+    /**
+     * Whether to show the heading
+     */
+    showHeading?: boolean;
+    /**
+     * Whether to remove the drop shadow
+     */
+    removeDropshadow?: boolean;
+    /**
+     * The content to display in the card
+     */
+    children?: React.ReactNode;
+    /**
+     * Additional CSS class names
+     */
+    className?: string;
+  }
+
+  export const Card: React.FC<CardProps>;
+}
+declare module 'shared_ui/ExpansionPanel' {
+    interface ExpansionPanelProps {
+        title: string;
+        description?: string;
+        children?: React.ReactNode;
+        defaultExpanded?: boolean;
+    }
+    const ExpansionPanel: React.FC<ExpansionPanelProps>;
+    export default ExpansionPanel;
 }
