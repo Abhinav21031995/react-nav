@@ -4,6 +4,11 @@ import Button from "shared_ui/Button";
 import Checkbox from "shared_ui/Checkbox";
 import RadioButton from "shared_ui/RadioButton";
 import { SharedComponentWrapper } from './SharedComponentWrapper';
+import { Chipset, type ChipItem } from "shared_ui/Chipset";
+import { Tooltip } from "shared_ui/Tooltip";
+import { ProgressSpinner } from "shared_ui/ProgressSpinner";
+import { Loader } from "shared_ui/Loader";
+import { Input } from "shared_ui/Input";
 
 interface DropdownOption {
   id: string;
@@ -40,28 +45,31 @@ const Dropdown = ({ options, onChange, show }: DropdownProps) => {
 
   return (
     <div className={styles.dropdown}>
-      {options.map((option) => (
-        <div 
-          key={option.id} 
-          className={styles.checkboxContainer}
-        >
-          <SharedComponentWrapper>
-            <Checkbox
-              label={option.label}
-              checked={option.checked}
-              color="primary"
-              onChange={(checked: boolean) => {
-                const newOptions = options.map(opt =>
-                  opt.id === option.id ? { ...opt, checked } : opt
-                );
-                onChange(newOptions);
-              }}
-            />
-          </SharedComponentWrapper>
-        </div>
-      ))}
+      <div style={{ borderTop: '1px solid #e0e0e0', marginTop: '8px', paddingTop: '8px' }}>
+        {options.map((option) => (
+          <div 
+            key={option.id} 
+            className={styles.checkboxContainer}
+          >
+            <SharedComponentWrapper>
+              <Checkbox
+                label={option.label}
+                checked={option.checked}
+                color="primary"
+                onChange={(checked: boolean) => {
+                  const newOptions = options.map(opt =>
+                    opt.id === option.id ? { ...opt, checked } : opt
+                  );
+                  onChange(newOptions);
+                }}
+              />
+            </SharedComponentWrapper>
+          </div>
+        ))}
+      </div>
     </div>
   );
+  ;
 }
 
 interface NavbarState {
@@ -71,6 +79,7 @@ interface NavbarState {
   showEconomiesDropdown: boolean;
   showSubscriptionDropdown: boolean;
   selectedSubscription?: string;
+  searchQuery: string;
   industriesOptions: DropdownOption[];
   channelsOptions: DropdownOption[];
   companiesOptions: DropdownOption[];
@@ -107,6 +116,7 @@ class Navbar extends React.Component<{}, NavbarState> {
     showEconomiesDropdown: false,
     showSubscriptionDropdown: false,
     selectedSubscription: 'free',
+    searchQuery: '',
     companiesOptions: [
       { id: '1', label: 'Microsoft', checked: false },
       { id: '2', label: 'Apple', checked: false },
@@ -259,27 +269,102 @@ class Navbar extends React.Component<{}, NavbarState> {
             onClick={() => this.toggleDropdown('subscription')}
             isOpen={showSubscriptionDropdown}
           >
-            Subscription
+            <Tooltip 
+              label="Select your subscription type and manage features"
+              position="right"
+            >
+              <span>Subscription</span>
+            </Tooltip>
           </NavLink>
-          {showSubscriptionDropdown && (
-            <div className={styles.dropdown}>
-              <div className={styles.radioContainer}>
-                <SharedComponentWrapper>
-                  <RadioButton
-                    name="subscription"
-                    options={[
-                      { value: 'free', label: 'Free' },
-                      { value: 'premium', label: 'Premium' },
-                      { value: 'enterprise', label: 'Enterprise' }
-                    ]}
-                    selectedValue={selectedSubscription}
-                    onChange={(value) => this.setState({ selectedSubscription: value })}
-                    variant="primary"
-                  />
-                </SharedComponentWrapper>
-              </div>
+            <div className={`${styles.dropdown} ${showSubscriptionDropdown ? styles.show : ''}`}>
+              {showSubscriptionDropdown && (
+                <>
+                  <div className={styles.radioContainer}>
+                    <SharedComponentWrapper>
+                      <Tooltip
+                        label="Choose your subscription plan level"
+                        position="right"
+                      >
+                        <RadioButton
+                          name="subscription"
+                          options={[
+                            { value: 'free', label: 'Free' },
+                            { value: 'premium', label: 'Premium' },
+                            { value: 'enterprise', label: 'Enterprise' }
+                          ]}
+                          selectedValue={selectedSubscription}
+                          onChange={(value) => this.setState({ selectedSubscription: value })}
+                          variant="primary"
+                        />
+                      </Tooltip>
+                    </SharedComponentWrapper>
+                  </div>
+                  <div style={{ marginTop: 16, padding: '0 16px' }}>
+                    <SharedComponentWrapper>
+                      <Input
+                        value={this.state.searchQuery}
+                        placeholder="Search features..."
+                        label="Feature Search"
+                        onChange={(value) => this.setState({ searchQuery: value })}
+                      />
+                    </SharedComponentWrapper>
+                  </div>
+                  <div style={{ marginTop: 16 }}>
+                    <SharedComponentWrapper>
+                      <Tooltip
+                        label="Selected features and access levels for your subscription"
+                        position="left"
+                      >
+                        <Chipset
+                          chips={[
+                            { id: 1, label: 'Current Plan', removable: false, selected: true },
+                            { id: 2, label: 'Premium Features', removable: true, selected: false },
+                            { id: 3, label: 'Enterprise Access', removable: true, selected: false },
+                          ]}
+                          selectable={true}
+                          removable={true}
+                          onRemove={(chip: ChipItem) => console.log('Removed chip:', chip)}
+                          onToggle={(chip: ChipItem) => console.log('Toggled chip:', chip)}
+                        />
+                      </Tooltip>
+                    </SharedComponentWrapper>
+                  </div>
+                  <div style={{ marginTop: 16, padding: '16px' }}>
+                    <div style={{ display: 'flex', gap: '24px', alignItems: 'center', justifyContent: 'center', marginBottom: '24px' }}>
+                      <div>
+                        <p style={{ marginBottom: '8px', fontSize: '14px' }}>Loading...</p>
+                        <ProgressSpinner 
+                          mode="indeterminate"
+                          color="primary"
+                          size={40}
+                        />
+                      </div>
+                      <div>
+                        <p style={{ marginBottom: '8px', fontSize: '14px' }}>Progress</p>
+                        <ProgressSpinner 
+                          mode="determinate"
+                          color="accent"
+                          value={75}
+                          size={40}
+                        />
+                      </div>
+                      <div>
+                        <p style={{ marginBottom: '8px', fontSize: '14px' }}>Error</p>
+                        <ProgressSpinner 
+                          mode="indeterminate"
+                          color="warn"
+                          size={40}
+                        />
+                      </div>
+                    </div>
+                    <div style={{ borderTop: '1px solid #e0e0e0', paddingTop: '24px' }}>
+                      <p style={{ marginBottom: '16px', fontSize: '14px', textAlign: 'center' }}>Passport Logo Loader</p>
+                      <Loader />
+                    </div>
+                  </div>
+                </>
+              )}
             </div>
-          )}
         </div>
       </div>
       <div className={styles.navRight}>
